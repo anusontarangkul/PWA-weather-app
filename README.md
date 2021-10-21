@@ -1,70 +1,80 @@
-# Getting Started with Create React App
+# pwa-weather-app
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A weather app using the openweather API. This app is optimized as a Progressive Web App.
 
-## Available Scripts
+![screenshot](screenshot.png)
 
-In the project directory, you can run:
+|                                         |                                         |                                                   |
+| :-------------------------------------: | :-------------------------------------: | :-----------------------------------------------: |
+|    [Introduction](#pwa-weather-app)     | [Table of Contents](#table-of-contents) | [Development Highlights](#development-highlights) |
+|        [Deployment](#deployment)        |    [Page Directory](#page-directory)    |       [Code Hightlights](#code-highlights)        |
+| [Technologies Used](#Technologies-Used) |           [Credits](#Credits)           |                [License](#License)                |
 
-### `yarn start`
+## Development Highlights
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- Create service worker to cache pages, which provides offline functionality.
+- Create manifest for the app.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Deployment
 
-### `yarn test`
+This app is deployed on netlify.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+[Deployment](https://wonderful-jang-eb58fd.netlify.app/)
 
-### `yarn build`
+## Page Directory
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+The service worker.js file is created in the public folder. The index.html has a script tag that registers the service worker. The manifest.json and images are also in the public folder. The offline.html file that is loaded during offline functionality is in the public folder too.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Code Highlights
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Creating the manfest.json.
 
-### `yarn eject`
+```JavaScript
+{
+  "short_name": "Weather App",
+  "name": "Weather App PWA",
+  "icons": [
+    {
+      "src": "/images/logo.png",
+      "type": "image/png",
+      "sizes": "1024x1024"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+The service worker is listening to the fetch event. The service worker will see if any of the caches matches it and will return the matched if there is. If there is none, it will return the offline.html because there is only one index.html file in react and the user must be offline.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```JavaScript
+// listen for request
+self.addEventListener('fetch', (event) => {
+    event.respondWith(
+        caches.match(event.request)
+            .then(() => {
+                return fetch(event.request)
+                    .catch(() => caches.match('offline.html'))
+            })
+    )
+})
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Technologies
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+- [react](https://reactjs.org/)
+- [pwa](https://web.dev/progressive-web-apps/)
 
-## Learn More
+## Credits
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+The starter code was provided by 2U bootcamp.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+|                           |                                                                                                                                                                                                       |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **David Anusontarangkul** | [![Linkedin](https://i.stack.imgur.com/gVE0j.png) LinkedIn](https://www.linkedin.com/in/anusontarangkul/) [![GitHub](https://i.stack.imgur.com/tskMh.png) GitHub](https://github.com/anusontarangkul) |
 
-### Code Splitting
+## License
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
